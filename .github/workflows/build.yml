@@ -1,0 +1,155 @@
+name: Build Packages
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-deb:
+    name: Build DEB packages
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - jammy
+          - bookworm
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build DEB package for ${{ matrix.target }}
+        run: |
+          docker buildx build \
+            --target ${{ matrix.target }} \
+            --output type=local,dest=./output \
+            -f dalec-spry-sqlpage.yaml \
+            .
+
+      - name: Upload DEB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spry-sqlpage-${{ matrix.target }}-deb
+          path: ./output/*.deb
+
+  build-rpm:
+    name: Build RPM packages
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - rockylinux9
+          - almalinux9
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build RPM package for ${{ matrix.target }}
+        run: |
+          docker buildx build \
+            --target ${{ matrix.target }} \
+            --output type=local,dest=./output \
+            -f dalec-spry-sqlpage.yaml \
+            .
+
+      - name: Upload RPM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spry-sqlpage-${{ matrix.target }}-rpm
+          path: ./output/*.rpm
+
+  build-windows:
+    name: Build Windows package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Windows package
+        run: |
+          docker buildx build \
+            --target windowscross \
+            --output type=local,dest=./output \
+            -f dalec-spry-sqlpage.yaml \
+            .
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spry-sqlpage-windows
+          path: ./output/*.zip
+
+  build-macos:
+    name: Build macOS binaries
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Deno
+        run: |
+          curl -fsSL https://deno.land/install.sh | sh
+          echo "$HOME/.deno/bin" >> $GITHUB_PATH
+
+      - name: Download import_map.json
+        run: |
+          curl -o import_map.json https://raw.githubusercontent.com/programmablemd/spry/refs/heads/main/import_map.json
+
+      - name: Compile spry_sqlpage for macOS
+        run: |
+          deno compile \
+            --allow-all \
+            --import-map=import_map.json \
+            --output=spry-sqlpage-macos \
+            spry_sqlpage.ts
+
+      - name: Create macOS archive
+        run: |
+          mkdir -p output
+          tar -czf output/spry-sqlpage-macos.tar.gz spry-sqlpage-macos
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spry-sqlpage-macos
+          path: ./output/*.tar.gz
+
+  release:
+    name: Create Release
+    needs: [build-deb, build-rpm, build-windows, build-macos]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

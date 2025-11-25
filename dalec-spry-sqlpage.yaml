@@ -1,0 +1,53 @@
+# syntax=ghcr.io/azure/dalec/frontend:latest
+# DALEC config for packaging spry-sqlpage
+#
+# NOTE: This spec expects a pre-compiled binary in the build context.
+# Compile the binary first using: make compile-local
+# Then build packages using: make build-all
+
+name: spry-sqlpage
+version: 0.1.0
+revision: 1
+packager: Spry Team
+vendor: Spry
+license: MIT
+description: Spry SQLPage CLI - A declarative web application framework
+website: https://github.com/programmablemd/spry
+
+sources:
+  # Pre-compiled binary from build context
+  src:
+    context: {}
+
+artifacts:
+  binaries:
+    src/spry-sqlpage: {}
+
+tests:
+  - name: Check spry-sqlpage binary exists
+    steps:
+      - command: test -f /usr/bin/spry-sqlpage
+
+  - name: Verify spry-sqlpage is executable
+    steps:
+      - command: test -x /usr/bin/spry-sqlpage
+
+targets:
+  jammy:          # Ubuntu 22.04 DEB
+    dependencies:
+      runtime:
+        ca-certificates:
+  bookworm:       # Debian 12 DEB
+    dependencies:
+      runtime:
+        ca-certificates:
+  rockylinux9:    # Rocky Linux 9 RPM
+    dependencies:
+      runtime:
+        ca-certificates:
+  almalinux9:     # Alma Linux 9 RPM
+    dependencies:
+      runtime:
+        ca-certificates:
+  windowscross:   # Windows cross-compilation
+
