@@ -94,11 +94,17 @@ jobs:
             -f dalec-spry-sqlpage.yaml \
             .
 
+      - name: Package RPM binary
+        run: |
+          cd output
+          tar -czf spry-sqlpage-${{ matrix.target }}.tar.gz usr/bin/spry-sqlpage
+          mv spry-sqlpage-${{ matrix.target }}.tar.gz ../
+
       - name: Upload RPM artifact
         uses: actions/upload-artifact@v4
         with:
           name: spry-sqlpage-${{ matrix.target }}-rpm
-          path: ./output/usr/bin/spry-sqlpage
+          path: spry-sqlpage-${{ matrix.target }}.tar.gz
 
   build-windows:
     name: Build Windows package
@@ -131,11 +137,16 @@ jobs:
             -f dalec-spry-sqlpage.yaml \
             .
 
+      - name: Package Windows binary
+        run: |
+          cd output/Windows/System32
+          zip ../../../spry-sqlpage-windows.zip spry-sqlpage
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: spry-sqlpage-windows
-          path: ./output/Windows/System32/spry-sqlpage
+          path: spry-sqlpage-windows.zip
 
   build-macos:
     name: Build macOS binaries
@@ -179,12 +190,59 @@ jobs:
         with:
           path: artifacts
 
+      - name: Organize release files
+        run: |
+          mkdir -p release
+          # Copy DEB packages
+          find artifacts -name "*.deb" -exec cp {} release/ \;
+          # Copy RPM archives
+          find artifacts -name "*.tar.gz" -exec cp {} release/ \;
+          # Copy Windows archive
+          find artifacts -name "*.zip" -exec cp {} release/ \;
+          # List all files
+          ls -lh release/
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/**/*
+          files: release/*
           draft: false
           prerelease: false
+          body: |
+            ## Spry SQLPage v${{ github.ref_name }}
+
+            ### Installation
+
+            **Ubuntu 22.04 (Jammy):**
+            ```bash
+            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage_*_amd64.deb
+            sudo dpkg -i spry-sqlpage_*_amd64.deb
+            ```
+
+            **Debian 12 (Bookworm):**
+            ```bash
+            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage_*_amd64.deb
+            sudo dpkg -i spry-sqlpage_*_amd64.deb
+            ```
+
+            **Rocky/Alma Linux 9:**
+            ```bash
+            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage-rockylinux9.tar.gz
+            tar -xzf spry-sqlpage-rockylinux9.tar.gz
+            sudo cp usr/bin/spry-sqlpage /usr/local/bin/
+            ```
+
+            **Windows:**
+            ```powershell
+            # Download spry-sqlpage-windows.zip and extract
+            ```
+
+            **macOS:**
+            ```bash
+            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage-macos.tar.gz
+            tar -xzf spry-sqlpage-macos.tar.gz
+            sudo cp spry-sqlpage-macos /usr/local/bin/spry-sqlpage
+            ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
