@@ -64,58 +64,7 @@ jobs:
           name: spry-sqlpage-${{ matrix.target }}-deb
           path: ./output/${{ matrix.target }}/*.deb
 
-  build-rpm:
-    name: Build RPM packages
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target:
-          - rockylinux9
-          - almalinux9
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Install Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-
-      - name: Compile spry_sqlpage binary
-        run: |
-          deno compile \
-            --allow-all \
-            --import-map=import_map.json \
-            --output=spry-sqlpage \
-            spry_sqlpage.ts
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build RPM package for ${{ matrix.target }}
-        run: |
-          docker buildx build \
-            --target ${{ matrix.target }} \
-            --output type=local,dest=./output/${{ matrix.target }} \
-            -f dalec-spry-sqlpage.yaml \
-            .
-
-      - name: List output files
-        run: |
-          echo "Output directory contents:"
-          find ./output/${{ matrix.target }} -type f || echo "No files found"
-          ls -lah ./output/${{ matrix.target }}/ || echo "Directory not found"
-
-      - name: Package RPM binary
-        run: |
-          cd output/${{ matrix.target }}
-          tar -czf ../../spry-sqlpage-${{ matrix.target }}.tar.gz usr/bin/spry-sqlpage
-
-      - name: Upload RPM artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: spry-sqlpage-${{ matrix.target }}-rpm
-          path: spry-sqlpage-${{ matrix.target }}.tar.gz
 
   build-windows:
     name: Build Windows package
@@ -198,7 +147,7 @@ jobs:
 
   release:
     name: Create Release
-    needs: [build-deb, build-rpm, build-windows, build-macos]
+    needs: [build-deb, build-windows, build-macos]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
@@ -212,7 +161,7 @@ jobs:
           mkdir -p release
           # Copy DEB packages
           find artifacts -name "*.deb" -exec cp {} release/ \;
-          # Copy RPM archives
+          # Copy macOS archives
           find artifacts -name "*.tar.gz" -exec cp {} release/ \;
           # Copy Windows archive
           find artifacts -name "*.zip" -exec cp {} release/ \;
@@ -232,26 +181,20 @@ jobs:
 
             **Ubuntu 22.04 (Jammy):**
             ```bash
-            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage_*_amd64.deb
-            sudo dpkg -i spry-sqlpage_*_amd64.deb
+            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage_*ubuntu22.04*_amd64.deb
+            sudo dpkg -i spry-sqlpage_*ubuntu22.04*_amd64.deb
             ```
 
             **Debian 12 (Bookworm):**
             ```bash
-            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage_*_amd64.deb
-            sudo dpkg -i spry-sqlpage_*_amd64.deb
-            ```
-
-            **Rocky/Alma Linux 9:**
-            ```bash
-            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage-rockylinux9.tar.gz
-            tar -xzf spry-sqlpage-rockylinux9.tar.gz
-            sudo cp usr/bin/spry-sqlpage /usr/local/bin/
+            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage_*debian12*_amd64.deb
+            sudo dpkg -i spry-sqlpage_*debian12*_amd64.deb
             ```
 
             **Windows:**
             ```powershell
             # Download spry-sqlpage-windows.zip and extract
+            # Run spry-sqlpage.exe from the extracted folder
             ```
 
             **macOS:**
@@ -259,6 +202,7 @@ jobs:
             wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage-macos.tar.gz
             tar -xzf spry-sqlpage-macos.tar.gz
             sudo cp spry-sqlpage-macos /usr/local/bin/spry-sqlpage
+            chmod +x /usr/local/bin/spry-sqlpage
             ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -41,13 +41,5 @@ targets:
     dependencies:
       runtime:
         ca-certificates:
-  rockylinux9:    # Rocky Linux 9 RPM
-    dependencies:
-      runtime:
-        ca-certificates:
-  almalinux9:     # Alma Linux 9 RPM
-    dependencies:
-      runtime:
-        ca-certificates:
   windowscross:   # Windows cross-compilation
 

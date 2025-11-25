@@ -1,4 +1,4 @@
-.PHONY: help build-all build-deb build-rpm build-windows clean test
+.PHONY: help build-all build-deb build-windows clean test
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
@@ -6,7 +6,7 @@ help: ## Show this help message
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-build-all: compile-local build-deb build-rpm build-windows ## Build packages for all platforms
+build-all: compile-local build-deb build-windows ## Build packages for all platforms
 
 build-deb: build-jammy build-bookworm ## Build all DEB packages
 
@@ -26,23 +26,7 @@ build-bookworm: compile-local ## Build DEB package for Debian Bookworm
 		-f dalec-spry-sqlpage.yaml \
 		.
 
-build-rpm: build-rocky build-alma ## Build all RPM packages
 
-build-rocky: compile-local ## Build RPM package for Rocky Linux 9
-	@echo "Building RPM package for Rocky Linux 9..."
-	docker buildx build \
-		--target rockylinux9 \
-		--output type=local,dest=./output/rockylinux9 \
-		-f dalec-spry-sqlpage.yaml \
-		.
-
-build-alma: compile-local ## Build RPM package for Alma Linux 9
-	@echo "Building RPM package for Alma Linux 9..."
-	docker buildx build \
-		--target almalinux9 \
-		--output type=local,dest=./output/almalinux9 \
-		-f dalec-spry-sqlpage.yaml \
-		.
 
 build-windows: compile-local ## Build Windows package (cross-compilation)
 	@echo "Building Windows package..."
