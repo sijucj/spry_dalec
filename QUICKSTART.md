@@ -10,7 +10,7 @@ Get started with Spry SQLPage DALEC packages in minutes!
 
 ```bash
 # Download the latest release
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/latest/download/spry-sqlpage_jammy.deb
+wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_jammy.deb
 
 # Install
 sudo dpkg -i spry-sqlpage_jammy.deb
@@ -23,7 +23,7 @@ spry-sqlpage --version
 
 ```bash
 # Download the latest release
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/latest/download/spry-sqlpage_rockylinux9.rpm
+wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_rockylinux9.rpm
 
 # Install
 sudo rpm -i spry-sqlpage_rockylinux9.rpm
@@ -36,7 +36,7 @@ spry-sqlpage --version
 
 ```bash
 # Download and extract
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/latest/download/spry-sqlpage-macos.tar.gz
+wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage-macos.tar.gz
 tar -xzf spry-sqlpage-macos.tar.gz
 
 # Move to PATH
@@ -48,7 +48,7 @@ spry-sqlpage --version
 
 #### Windows
 
-1. Download `spry-sqlpage-windows.zip` from [releases](https://github.com/YOUR_USERNAME/spry_dalec/releases/latest)
+1. Download `spry-sqlpage-windows.zip` from [releases](https://github.com/sijucj/spry_dalec/releases/latest)
 2. Extract the ZIP file
 3. Add the extracted directory to your PATH
 4. Open a new terminal and run: `spry-sqlpage --version`
@@ -72,7 +72,7 @@ docker buildx version
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/spry_dalec.git
+git clone https://github.com/sijucj/spry_dalec.git
 cd spry_dalec
 
 # Build all packages
@@ -183,7 +183,7 @@ make build-all
 
 ## Getting Help
 
-- [Open an issue](https://github.com/YOUR_USERNAME/spry_dalec/issues)
+- [Open an issue](https://github.com/sijucj/spry_dalec/issues)
 - [Spry Documentation](https://github.com/programmablemd/spry)
 - [DALEC Documentation](https://project-dalec.github.io/dalec/)
 

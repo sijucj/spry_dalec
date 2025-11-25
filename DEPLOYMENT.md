@@ -32,7 +32,7 @@ git commit -m "Initial commit: Spry SQLPage DALEC packaging"
 
 ```bash
 # Add remote
-git remote add origin https://github.com/YOUR_USERNAME/spry_dalec.git
+git remote add origin https://github.com/sijucj/spry_dalec.git
 
 # Push to main branch
 git branch -M main
@@ -59,7 +59,7 @@ Before creating a release, update the following files with your actual GitHub us
 
 ```bash
 # Quick find and replace (Linux/macOS)
-find . -type f -name "*.md" -exec sed -i 's/YOUR_USERNAME/your-actual-username/g' {} +
+find . -type f -name "*.md" -exec sed -i 's/YOUR_USERNAME/sijucj/g' {} +
 
 # Or manually edit each file
 ```
@@ -139,14 +139,14 @@ Download and test a package for your platform:
 
 ### Ubuntu/Debian
 ```bash
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/download/v0.1.0/spry-sqlpage_jammy.deb
+wget https://github.com/sijucj/spry_dalec/releases/download/v0.1.0/spry-sqlpage_jammy.deb
 sudo dpkg -i spry-sqlpage_jammy.deb
 spry-sqlpage --help
 ```
 
 ### Rocky/Alma Linux
 ```bash
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/download/v0.1.0/spry-sqlpage_rockylinux9.rpm
+wget https://github.com/sijucj/spry_dalec/releases/download/v0.1.0/spry-sqlpage_rockylinux9.rpm
 sudo rpm -i spry-sqlpage_rockylinux9.rpm
 spry-sqlpage --help
 ```

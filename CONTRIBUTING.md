@@ -8,7 +8,7 @@ Thank you for your interest in contributing to the Spry DALEC packaging project!
 
 If you encounter any issues with the packages:
 
-1. Check if the issue already exists in the [Issues](https://github.com/YOUR_USERNAME/spry_dalec/issues) section
+1. Check if the issue already exists in the [Issues](https://github.com/sijucj/spry_dalec/issues) section
 2. If not, create a new issue with:
    - A clear title and description
    - Steps to reproduce the problem

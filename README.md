@@ -14,11 +14,11 @@ Spry SQLPage is a declarative web application framework built on Deno. This repo
 
 ```bash
 # Ubuntu (Jammy)
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/latest/download/spry-sqlpage_jammy.deb
+wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_jammy.deb
 sudo dpkg -i spry-sqlpage_jammy.deb
 
 # Debian (Bookworm)
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/latest/download/spry-sqlpage_bookworm.deb
+wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_bookworm.deb
 sudo dpkg -i spry-sqlpage_bookworm.deb
 ```
 
@@ -26,11 +26,11 @@ sudo dpkg -i spry-sqlpage_bookworm.deb
 
 ```bash
 # Rocky Linux 9
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/latest/download/spry-sqlpage_rockylinux9.rpm
+wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_rockylinux9.rpm
 sudo rpm -i spry-sqlpage_rockylinux9.rpm
 
 # Alma Linux 9
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/latest/download/spry-sqlpage_almalinux9.rpm
+wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_almalinux9.rpm
 sudo rpm -i spry-sqlpage_almalinux9.rpm
 ```
 
@@ -38,7 +38,7 @@ sudo rpm -i spry-sqlpage_almalinux9.rpm
 
 ```bash
 # Download and extract
-wget https://github.com/YOUR_USERNAME/spry_dalec/releases/latest/download/spry-sqlpage-macos.tar.gz
+wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage-macos.tar.gz
 tar -xzf spry-sqlpage-macos.tar.gz
 sudo mv spry-sqlpage-macos /usr/local/bin/spry-sqlpage
 ```
@@ -47,12 +47,12 @@ sudo mv spry-sqlpage-macos /usr/local/bin/spry-sqlpage
 
 ```powershell
 # Download from releases page
-# https://github.com/YOUR_USERNAME/spry_dalec/releases/latest
+# https://github.com/sijucj/spry_dalec/releases/latest
 ```
 
 ### 🔗 Direct Download
 
-Visit our [GitHub Releases](https://github.com/YOUR_USERNAME/spry_dalec/releases) page to download pre-built binaries for your operating system:
+Visit our [GitHub Releases](https://github.com/sijucj/spry_dalec/releases) page to download pre-built binaries for your operating system:
 
 - **Windows**: `spry-sqlpage-windows.zip`
 - **macOS**: `spry-sqlpage-macos.tar.gz`
@@ -133,7 +133,7 @@ This repository is powered by [DALEC](https://github.com/project-dalec/dalec) fo
 - **Windows binaries** (.zip)
 - **macOS binaries** (.tar.gz)
 
-For the latest release notes, visit [GitHub Releases](https://github.com/YOUR_USERNAME/spry_dalec/releases).
+For the latest release notes, visit [GitHub Releases](https://github.com/sijucj/spry_dalec/releases).
 
 ## Contributing
 
