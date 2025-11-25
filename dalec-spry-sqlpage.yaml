@@ -6,7 +6,7 @@
 # Then build packages using: make build-all
 
 name: spry-sqlpage
-version: 0.1.2
+version: 0.1.3
 revision: 1
 packager: Spry Team
 vendor: Spry
