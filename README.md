@@ -10,35 +10,38 @@ Spry SQLPage is a declarative web application framework built on Deno. This repo
 
 ### 📦 Package Managers (Recommended)
 
+#### Homebrew (macOS & Linux)
+
+```bash
+# Install from tap
+brew tap sijucj/spry_dalec https://github.com/sijucj/spry_dalec
+brew install spry-sqlpage
+
+# Or install directly without tapping
+brew install sijucj/spry_dalec/spry-sqlpage
+```
+
+See [HOMEBREW.md](HOMEBREW.md) for more details.
+
 #### Ubuntu/Debian (.deb packages)
 
 ```bash
-# Ubuntu (Jammy)
-wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_jammy.deb
-sudo dpkg -i spry-sqlpage_jammy.deb
+# Ubuntu 22.04 (Jammy)
+wget https://github.com/sijucj/spry_dalec/releases/download/v0.1.8/spry-sqlpage_0.1.8-ubuntu22.04u1_amd64.deb
+sudo dpkg -i spry-sqlpage_0.1.8-ubuntu22.04u1_amd64.deb
 
-# Debian (Bookworm)
-wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_bookworm.deb
-sudo dpkg -i spry-sqlpage_bookworm.deb
+# Debian 12 (Bookworm)
+wget https://github.com/sijucj/spry_dalec/releases/download/v0.1.8/spry-sqlpage_0.1.8-debian12u1_amd64.deb
+sudo dpkg -i spry-sqlpage_0.1.8-debian12u1_amd64.deb
 ```
 
-#### RHEL/Rocky Linux/Alma Linux (.rpm packages)
+#### macOS (Manual Installation)
 
-```bash
-# Rocky Linux 9
-wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_rockylinux9.rpm
-sudo rpm -i spry-sqlpage_rockylinux9.rpm
-
-# Alma Linux 9
-wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage_almalinux9.rpm
-sudo rpm -i spry-sqlpage_almalinux9.rpm
-```
-
-#### macOS
+If you prefer not to use Homebrew:
 
 ```bash
 # Download and extract
-wget https://github.com/sijucj/spry_dalec/releases/latest/download/spry-sqlpage-macos.tar.gz
+wget https://github.com/sijucj/spry_dalec/releases/download/v0.1.8/spry-sqlpage-macos.tar.gz
 tar -xzf spry-sqlpage-macos.tar.gz
 sudo mv spry-sqlpage-macos /usr/local/bin/spry-sqlpage
 ```
@@ -46,8 +49,11 @@ sudo mv spry-sqlpage-macos /usr/local/bin/spry-sqlpage
 #### Windows
 
 ```powershell
-# Download from releases page
-# https://github.com/sijucj/spry_dalec/releases/latest
+# Download the Windows package
+# https://github.com/sijucj/spry_dalec/releases/download/v0.1.8/spry-sqlpage-windows.zip
+
+# Extract the zip file and run:
+.\spry-sqlpage.exe --help
 ```
 
 ### 🔗 Direct Download
