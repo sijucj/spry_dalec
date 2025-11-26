@@ -141,10 +141,6 @@ This repository is powered by [DALEC](https://github.com/project-dalec/dalec) fo
 
 For the latest release notes, visit [GitHub Releases](https://github.com/sijucj/spry_dalec/releases).
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## License
 
 This packaging repository is licensed under MIT. The Spry project has its own license.
