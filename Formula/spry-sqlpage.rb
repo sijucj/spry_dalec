@@ -25,7 +25,8 @@ class SprySqlpage < Formula
     elsif OS.linux?
       # For Linux, we need to extract the DEB package
       system "ar", "x", "spry-sqlpage_0.1.8-ubuntu22.04u1_amd64.deb"
-      system "tar", "xzf", "data.tar.gz"
+      # Modern DEB packages use zstd compression
+      system "tar", "--use-compress-program=unzstd", "-xf", "data.tar.zst"
       bin.install "usr/bin/spry-sqlpage"
     end
   end
