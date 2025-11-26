@@ -10,15 +10,25 @@ permissions:
   contents: write
   packages: write
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   build-deb:
     name: Build DEB packages
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     strategy:
       matrix:
         target:
           - jammy
           - bookworm
+        platform:
+          - linux/amd64
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,8 +46,19 @@ jobs:
             --output=spry-sqlpage \
             spry_sqlpage.ts
 
+          # Place binary where DALEC expects it
+          mkdir -p src
+          cp spry-sqlpage src/spry-sqlpage
+          chmod +x src/spry-sqlpage
+
+          echo "✅ spry-sqlpage binary compiled and prepared."
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container
+          driver-opts: |
+            network=host
 
       - name: Build DEB package for ${{ matrix.target }}
         run: |
@@ -64,6 +85,10 @@ jobs:
   build-windows:
     name: Build Windows package
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -81,8 +106,19 @@ jobs:
             --output=spry-sqlpage \
             spry_sqlpage.ts
 
+          # Place binary where DALEC expects it
+          mkdir -p src
+          cp spry-sqlpage src/spry-sqlpage
+          chmod +x src/spry-sqlpage
+
+          echo "✅ spry-sqlpage binary compiled and prepared."
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container
+          driver-opts: |
+            network=host
 
       - name: Build Windows package
         run: |
@@ -112,6 +148,9 @@ jobs:
   build-macos:
     name: Build macOS binaries
     runs-on: macos-latest
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -129,10 +168,15 @@ jobs:
             --output=spry-sqlpage-macos \
             spry_sqlpage.ts
 
+          echo "✅ spry-sqlpage macOS binary compiled."
+
       - name: Create macOS archive
         run: |
           mkdir -p output
           tar -czf output/spry-sqlpage-macos.tar.gz spry-sqlpage-macos
+
+          echo "📦 macOS archive created:"
+          ls -lh output/
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
@@ -144,11 +188,22 @@ jobs:
     name: Create Release
     needs: [build-deb, build-windows, build-macos]
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    permissions:
+      contents: write
+
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
+      - name: List downloaded artifacts
+        run: |
+          echo "📦 Downloaded artifacts:"
+          find ./artifacts -type f -name "*.deb" -o -name "*.tar.gz" -o -name "*.zip" | head -20
+          ls -la ./artifacts/ || echo "No artifacts directory"
 
       - name: Organize release files
         run: |
@@ -160,6 +215,7 @@ jobs:
           # Copy Windows archive
           find artifacts -name "*.zip" -exec cp {} release/ \;
           # List all files
+          echo "📦 Release files:"
           ls -lh release/
 
       - name: Create Release
@@ -169,34 +225,41 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            ## Spry SQLPage v${{ github.ref_name }}
+            ## Spry SQLPage ${{ github.ref_name }}
 
-            ### Installation
+            ### 📦 Package Managers (Recommended)
 
-            **Ubuntu 22.04 (Jammy):**
+            #### Ubuntu 22.04 (Jammy)
             ```bash
-            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage_*ubuntu22.04*_amd64.deb
+            wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/spry-sqlpage_*ubuntu22.04*_amd64.deb
             sudo dpkg -i spry-sqlpage_*ubuntu22.04*_amd64.deb
             ```
 
-            **Debian 12 (Bookworm):**
+            #### Debian 12 (Bookworm)
             ```bash
-            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage_*debian12*_amd64.deb
+            wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/spry-sqlpage_*debian12*_amd64.deb
             sudo dpkg -i spry-sqlpage_*debian12*_amd64.deb
             ```
 
-            **Windows:**
+            #### Windows
             ```powershell
-            # Download spry-sqlpage-windows.zip and extract
+            # Download and extract spry-sqlpage-windows.zip
             # Run spry-sqlpage.exe from the extracted folder
             ```
 
-            **macOS:**
+            #### macOS
             ```bash
-            wget https://github.com/sijucj/spry_dalec/releases/download/${{ github.ref_name }}/spry-sqlpage-macos.tar.gz
+            wget https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/spry-sqlpage-macos.tar.gz
             tar -xzf spry-sqlpage-macos.tar.gz
             sudo cp spry-sqlpage-macos /usr/local/bin/spry-sqlpage
             chmod +x /usr/local/bin/spry-sqlpage
+            ```
+
+            ### 🔍 Verification
+            After installation, verify that spry-sqlpage is working correctly:
+            ```bash
+            spry-sqlpage --version
+            spry-sqlpage --help
             ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

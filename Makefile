@@ -10,7 +10,7 @@ build-all: compile-local build-deb build-windows ## Build packages for all platf
 
 build-deb: build-jammy build-bookworm ## Build all DEB packages
 
-build-jammy: compile-local ## Build DEB package for Ubuntu Jammy
+build-jammy: compile-local prepare-src ## Build DEB package for Ubuntu Jammy
 	@echo "Building DEB package for Ubuntu Jammy..."
 	docker buildx build \
 		--target jammy \
@@ -18,7 +18,7 @@ build-jammy: compile-local ## Build DEB package for Ubuntu Jammy
 		-f dalec-spry-sqlpage.yaml \
 		.
 
-build-bookworm: compile-local ## Build DEB package for Debian Bookworm
+build-bookworm: compile-local prepare-src ## Build DEB package for Debian Bookworm
 	@echo "Building DEB package for Debian Bookworm..."
 	docker buildx build \
 		--target bookworm \
@@ -26,9 +26,7 @@ build-bookworm: compile-local ## Build DEB package for Debian Bookworm
 		-f dalec-spry-sqlpage.yaml \
 		.
 
-
-
-build-windows: compile-local ## Build Windows package (cross-compilation)
+build-windows: compile-local prepare-src ## Build Windows package (cross-compilation)
 	@echo "Building Windows package..."
 	docker buildx build \
 		--target windowscross \
@@ -44,10 +42,17 @@ compile-local: ## Compile spry_sqlpage locally with Deno
 			--import-map=import_map.json \
 			--output=spry-sqlpage \
 			spry_sqlpage.ts; \
-		echo "Done! Binary created: ./spry-sqlpage"; \
+		echo "✅ Done! Binary created: ./spry-sqlpage"; \
 	else \
-		echo "Binary already exists: ./spry-sqlpage"; \
+		echo "✅ Binary already exists: ./spry-sqlpage"; \
 	fi
+
+prepare-src: compile-local ## Prepare src directory for DALEC
+	@echo "Preparing src directory for DALEC..."
+	@mkdir -p src
+	@cp spry-sqlpage src/spry-sqlpage
+	@chmod +x src/spry-sqlpage
+	@echo "✅ Binary prepared in src/ directory"
 
 test: ## Test the compiled binary
 	@echo "Testing spry-sqlpage binary..."
@@ -56,9 +61,10 @@ test: ## Test the compiled binary
 clean: ## Clean build artifacts
 	@echo "Cleaning build artifacts..."
 	rm -rf output/
+	rm -rf src/
 	rm -f spry-sqlpage
 	rm -f spry-sqlpage-*
-	@echo "Clean complete."
+	@echo "✅ Clean complete."
 
 install: ## Install spry-sqlpage locally (requires sudo)
 	@echo "Installing spry-sqlpage to /usr/local/bin..."

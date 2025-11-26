@@ -1,12 +1,8 @@
 # syntax=ghcr.io/azure/dalec/frontend:latest
-# DALEC config for packaging spry-sqlpage
-#
-# NOTE: This spec expects a pre-compiled binary in the build context.
-# Compile the binary first using: make compile-local
-# Then build packages using: make build-all
+# DALEC config for packaging existing spry-sqlpage binary
 
 name: spry-sqlpage
-version: 0.1.4
+version: 0.1.5
 revision: 1
 packager: Spry Team
 vendor: Spry
@@ -15,13 +11,28 @@ description: Spry SQLPage CLI - A declarative web application framework
 website: https://github.com/programmablemd/spry
 
 sources:
-  # Pre-compiled binary from build context
   src:
     context: {}
 
+# No compilation - just package existing binary from build context
+build:
+  steps:
+    - command: |
+        set -ex
+        # Debug: Check what files are available
+        pwd
+        ls -la
+        find . -name "*spry-sqlpage*" -type f
+
+        # Binary provided by workflow
+        # The source name "src" becomes a directory, so binary is at src/src/spry-sqlpage
+        ls -la src/src/spry-sqlpage
+        cp src/src/spry-sqlpage ./spry-sqlpage
+        chmod +x spry-sqlpage
+
 artifacts:
   binaries:
-    src/spry-sqlpage: {}
+    spry-sqlpage:
 
 tests:
   - name: Check spry-sqlpage binary exists
