@@ -26,18 +26,18 @@ build-bookworm: compile-local prepare-src ## Build DEB package for Debian Bookwo
 		-f dalec-spry-sqlpage.yaml \
 		.
 
-build-windows: compile-local prepare-src ## Build Windows package (cross-compilation)
-	@echo "Building Windows package..."
-	docker buildx build \
-		--target windowscross \
-		--output type=local,dest=./output/windows \
-		-f dalec-spry-sqlpage.yaml \
-		.
+build-windows: ## Build Windows package (native Deno compilation)
+	@echo "Compiling spry_sqlpage for Windows..."
+	deno compile \
+		--allow-all \
+		--import-map=import_map.json \
+		--target x86_64-pc-windows-msvc \
+		--output=spry-sqlpage.exe \
+		spry_sqlpage.ts
 	@echo "Packaging Windows binary..."
-	cd output/windows/Windows/System32 && \
-		mv spry-sqlpage spry-sqlpage.exe && \
-		zip ../../../../spry-sqlpage-windows.zip spry-sqlpage.exe
-	@echo "✅ Windows package created: spry-sqlpage-windows.zip"
+	mkdir -p output
+	zip output/spry-sqlpage-windows.zip spry-sqlpage.exe
+	@echo "✅ Windows package created: output/spry-sqlpage-windows.zip"
 
 compile-local: ## Compile spry_sqlpage locally with Deno
 	@if [ ! -f spry-sqlpage ]; then \
