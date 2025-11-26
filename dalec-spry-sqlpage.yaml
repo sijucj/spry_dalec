@@ -2,7 +2,7 @@
 # DALEC config for packaging existing spry-sqlpage binary
 
 name: spry-sqlpage
-version: 0.1.5
+version: 0.1.6
 revision: 1
 packager: Spry Team
 vendor: Spry
@@ -16,6 +16,9 @@ sources:
 
 # No compilation - just package existing binary from build context
 build:
+  env:
+    # Disable stripping to preserve Deno binary metadata
+    DEB_BUILD_OPTIONS: "nostrip"
   steps:
     - command: |
         set -ex
@@ -27,8 +30,13 @@ build:
         # Binary provided by workflow
         # The source name "src" becomes a directory, so binary is at src/src/spry-sqlpage
         ls -la src/src/spry-sqlpage
-        cp src/src/spry-sqlpage ./spry-sqlpage
+        # Use cp -p to preserve permissions and attributes
+        cp -p src/src/spry-sqlpage ./spry-sqlpage
         chmod +x spry-sqlpage
+
+        # Verify the binary works before packaging
+        file ./spry-sqlpage
+        ls -lh ./spry-sqlpage
 
 artifacts:
   binaries:
