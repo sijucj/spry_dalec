@@ -33,6 +33,11 @@ build-windows: compile-local prepare-src ## Build Windows package (cross-compila
 		--output type=local,dest=./output/windows \
 		-f dalec-spry-sqlpage.yaml \
 		.
+	@echo "Packaging Windows binary..."
+	cd output/windows/Windows/System32 && \
+		mv spry-sqlpage spry-sqlpage.exe && \
+		zip ../../../../spry-sqlpage-windows.zip spry-sqlpage.exe
+	@echo "✅ Windows package created: spry-sqlpage-windows.zip"
 
 compile-local: ## Compile spry_sqlpage locally with Deno
 	@if [ ! -f spry-sqlpage ]; then \

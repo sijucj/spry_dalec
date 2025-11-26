@@ -137,7 +137,9 @@ jobs:
       - name: Package Windows binary
         run: |
           cd output/windows/Windows/System32
-          zip ../../../../spry-sqlpage-windows.zip spry-sqlpage
+          # Rename to .exe for Windows
+          mv spry-sqlpage spry-sqlpage.exe
+          zip ../../../../spry-sqlpage-windows.zip spry-sqlpage.exe
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
