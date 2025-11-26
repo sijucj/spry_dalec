@@ -23,10 +23,8 @@ class SprySqlpage < Formula
     if OS.mac?
       bin.install "spry-sqlpage-macos" => "spry-sqlpage"
     elsif OS.linux?
-      # For Linux, we need to extract the DEB package
-      system "ar", "x", "spry-sqlpage_0.1.8-ubuntu22.04u1_amd64.deb"
-      # Modern DEB packages use zstd compression
-      system "tar", "--use-compress-program=unzstd", "-xf", "data.tar.zst"
+      # For Linux, extract the DEB package using dpkg-deb
+      system "dpkg-deb", "-x", "spry-sqlpage_0.1.8-ubuntu22.04u1_amd64.deb", "."
       bin.install "usr/bin/spry-sqlpage"
     end
   end
